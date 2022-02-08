@@ -41,8 +41,8 @@
             this.lblCurrentTable = new System.Windows.Forms.Label();
             this.btnDeleteTable = new System.Windows.Forms.Button();
             this.btnSelectTable = new System.Windows.Forms.Button();
-            this.btnUpdateList = new System.Windows.Forms.Button();
             this.listDatabases = new System.Windows.Forms.TreeView();
+            this.cbxMessages = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnDisconnect
@@ -66,21 +66,21 @@
             // 
             // txbTableName
             // 
-            this.txbTableName.Location = new System.Drawing.Point(191, 95);
+            this.txbTableName.Location = new System.Drawing.Point(25, 125);
             this.txbTableName.Name = "txbTableName";
             this.txbTableName.Size = new System.Drawing.Size(134, 20);
             this.txbTableName.TabIndex = 10;
             // 
             // txbDBName
             // 
-            this.txbDBName.Location = new System.Drawing.Point(191, 13);
+            this.txbDBName.Location = new System.Drawing.Point(25, 41);
             this.txbDBName.Name = "txbDBName";
             this.txbDBName.Size = new System.Drawing.Size(136, 20);
             this.txbDBName.TabIndex = 9;
             // 
             // btnSelectDB
             // 
-            this.btnSelectDB.Location = new System.Drawing.Point(23, 12);
+            this.btnSelectDB.Location = new System.Drawing.Point(672, 50);
             this.btnSelectDB.Name = "btnSelectDB";
             this.btnSelectDB.Size = new System.Drawing.Size(136, 23);
             this.btnSelectDB.TabIndex = 7;
@@ -91,7 +91,7 @@
             // lblCurrentDB
             // 
             this.lblCurrentDB.AutoSize = true;
-            this.lblCurrentDB.Location = new System.Drawing.Point(204, 50);
+            this.lblCurrentDB.Location = new System.Drawing.Point(204, 44);
             this.lblCurrentDB.Name = "lblCurrentDB";
             this.lblCurrentDB.Size = new System.Drawing.Size(109, 13);
             this.lblCurrentDB.TabIndex = 8;
@@ -99,7 +99,7 @@
             // 
             // btnCreateTable
             // 
-            this.btnCreateTable.Location = new System.Drawing.Point(23, 129);
+            this.btnCreateTable.Location = new System.Drawing.Point(25, 158);
             this.btnCreateTable.Name = "btnCreateTable";
             this.btnCreateTable.Size = new System.Drawing.Size(136, 22);
             this.btnCreateTable.TabIndex = 6;
@@ -110,7 +110,7 @@
             // lblDatabaseInput
             // 
             this.lblDatabaseInput.AutoSize = true;
-            this.lblDatabaseInput.Location = new System.Drawing.Point(254, 162);
+            this.lblDatabaseInput.Location = new System.Drawing.Point(22, 109);
             this.lblDatabaseInput.Name = "lblDatabaseInput";
             this.lblDatabaseInput.Size = new System.Drawing.Size(59, 13);
             this.lblDatabaseInput.TabIndex = 11;
@@ -118,7 +118,7 @@
             // 
             // btnDeleteDB
             // 
-            this.btnDeleteDB.Location = new System.Drawing.Point(363, 12);
+            this.btnDeleteDB.Location = new System.Drawing.Point(177, 74);
             this.btnDeleteDB.Name = "btnDeleteDB";
             this.btnDeleteDB.Size = new System.Drawing.Size(136, 23);
             this.btnDeleteDB.TabIndex = 13;
@@ -128,7 +128,7 @@
             // 
             // btnCreateDB
             // 
-            this.btnCreateDB.Location = new System.Drawing.Point(23, 45);
+            this.btnCreateDB.Location = new System.Drawing.Point(25, 74);
             this.btnCreateDB.Name = "btnCreateDB";
             this.btnCreateDB.Size = new System.Drawing.Size(136, 23);
             this.btnCreateDB.TabIndex = 14;
@@ -139,7 +139,7 @@
             // lblCurrentTable
             // 
             this.lblCurrentTable.AutoSize = true;
-            this.lblCurrentTable.Location = new System.Drawing.Point(204, 138);
+            this.lblCurrentTable.Location = new System.Drawing.Point(204, 132);
             this.lblCurrentTable.Name = "lblCurrentTable";
             this.lblCurrentTable.Size = new System.Drawing.Size(109, 13);
             this.lblCurrentTable.TabIndex = 15;
@@ -148,7 +148,7 @@
             // btnDeleteTable
             // 
             this.btnDeleteTable.Enabled = false;
-            this.btnDeleteTable.Location = new System.Drawing.Point(364, 93);
+            this.btnDeleteTable.Location = new System.Drawing.Point(178, 158);
             this.btnDeleteTable.Name = "btnDeleteTable";
             this.btnDeleteTable.Size = new System.Drawing.Size(135, 23);
             this.btnDeleteTable.TabIndex = 16;
@@ -158,7 +158,7 @@
             // 
             // btnSelectTable
             // 
-            this.btnSelectTable.Location = new System.Drawing.Point(23, 94);
+            this.btnSelectTable.Location = new System.Drawing.Point(795, 152);
             this.btnSelectTable.Name = "btnSelectTable";
             this.btnSelectTable.Size = new System.Drawing.Size(136, 23);
             this.btnSelectTable.TabIndex = 17;
@@ -166,31 +166,35 @@
             this.btnSelectTable.UseVisualStyleBackColor = true;
             this.btnSelectTable.Click += new System.EventHandler(this.BtnSelectTable_Click);
             // 
-            // btnUpdateList
-            // 
-            this.btnUpdateList.Location = new System.Drawing.Point(191, 256);
-            this.btnUpdateList.Name = "btnUpdateList";
-            this.btnUpdateList.Size = new System.Drawing.Size(136, 23);
-            this.btnUpdateList.TabIndex = 19;
-            this.btnUpdateList.Text = "Update List";
-            this.btnUpdateList.UseVisualStyleBackColor = true;
-            this.btnUpdateList.Click += new System.EventHandler(this.BtnUpdateList_Click);
-            // 
             // listDatabases
             // 
             this.listDatabases.Location = new System.Drawing.Point(23, 297);
             this.listDatabases.Name = "listDatabases";
             this.listDatabases.Size = new System.Drawing.Size(476, 278);
             this.listDatabases.TabIndex = 20;
-            this.listDatabases.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ListDatabases_NodeMouseClick);
+            this.listDatabases.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.ListDatabases_Databases);
+            // 
+            // cbxMessages
+            // 
+            this.cbxMessages.AutoSize = true;
+            this.cbxMessages.Checked = true;
+            this.cbxMessages.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbxMessages.Location = new System.Drawing.Point(419, 246);
+            this.cbxMessages.Name = "cbxMessages";
+            this.cbxMessages.Size = new System.Drawing.Size(75, 17);
+            this.cbxMessages.TabIndex = 21;
+            this.cbxMessages.Text = "Textboxes";
+            this.cbxMessages.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.cbxMessages.UseVisualStyleBackColor = true;
+            this.cbxMessages.CheckedChanged += new System.EventHandler(this.Messages_CheckedChanged);
             // 
             // ActionsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1033, 597);
+            this.Controls.Add(this.cbxMessages);
             this.Controls.Add(this.listDatabases);
-            this.Controls.Add(this.btnUpdateList);
             this.Controls.Add(this.btnSelectTable);
             this.Controls.Add(this.btnDeleteTable);
             this.Controls.Add(this.lblCurrentTable);
@@ -231,8 +235,8 @@
         private System.Windows.Forms.Label lblCurrentTable;
         private System.Windows.Forms.Button btnDeleteTable;
         private System.Windows.Forms.Button btnSelectTable;
-        private System.Windows.Forms.Button btnUpdateList;
         private System.Windows.Forms.TreeView listDatabases;
+        private System.Windows.Forms.CheckBox cbxMessages;
     }
 }
 

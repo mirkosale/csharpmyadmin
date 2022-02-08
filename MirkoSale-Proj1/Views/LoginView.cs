@@ -16,7 +16,7 @@ namespace MirkoSale_MySQL
         public string Title { get; set; }
         public string Message { get; set; }
         const MessageBoxButtons Button = MessageBoxButtons.OK;
-        public MessageBoxIcon Icon { get; set; }
+        public MessageBoxIcon Icon;
 
         public MainController Controller { get => _controller; set => _controller = value; }
 
