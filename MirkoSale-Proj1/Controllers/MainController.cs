@@ -14,20 +14,27 @@ namespace MirkoSale_MySQL
     {
         private LoginView _loginView;
         private ActionsView _actionsView;
+        private TableView _tableView;
         private MainModel _model;
-        public MainController(LoginView loginView, ActionsView actionsView, MainModel model)
+
+        public bool MessageBoxes = true;
+
+        public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, MainModel model)
         {
             _loginView = loginView;
             _actionsView = actionsView;
+            _tableView = tableView;
             _model = model;
             loginView.Controller = this;
             actionsView.Controller = this;
+            tableView.Controller = this;
             model.Controller = this;
         }
 
         public ActionsView ActionsView { get => _actionsView; set => _actionsView = value; }
         public MainModel Model { get => _model; set => _model = value; }
         public LoginView LoginView { get => _loginView; set => _loginView = value; }
+        public TableView TableView { get => _tableView; set => _tableView = value; }
 
         public bool Connect(string user, string password)
         {
@@ -64,44 +71,34 @@ namespace MirkoSale_MySQL
             ActionsView.Title = "Success";
             ActionsView.Icon = MessageBoxIcon.Information;
         }
-
-        public bool SelectDatabase(string dbName)
+        public bool CreateDatabase(string dbNameNotChecked)
         {
-            Model.Command.CommandText = $"USE `{dbName}`;";
+            string dbName = dbNameNotChecked.Trim();
 
-            try { Model.Command.ExecuteNonQuery(); }
-            catch (MySql.Data.MySqlClient.MySqlException)
+            if (dbName.Length >= 1)
             {
-                ActionsView.Message = $"Can't use database \"{dbName}\".";
-                ActionsView.Title = "Error";
-                ActionsView.Icon = MessageBoxIcon.Error;
-                return false;
+                Model.Command.CommandText = $"CREATE DATABASE IF NOT EXISTS `{dbName}`; USE `{dbName}`;";
+
+                try { Model.Command.ExecuteNonQuery(); }
+                catch (MySql.Data.MySqlClient.MySqlException)
+                {
+                    ActionsView.Message = $"The database named \"{dbName}\" couldn't be created.";
+                    ActionsView.Title = "Error";
+                    ActionsView.Icon = MessageBoxIcon.Error;
+                    return false;
+                }
+
+                ActionsView.Message = $"Created database \"{dbName}\" and currently using it.";
+                ActionsView.Title = "Success";
+                ActionsView.Icon = MessageBoxIcon.Information;
+                Model.CurrentDB = dbName;
+                return true;
             }
 
-            ActionsView.Message = $"Currently using database : \"{dbName}\".";
-            ActionsView.Title = "Success";
-            ActionsView.Icon = MessageBoxIcon.Information;
-            Model.CurrentDB = dbName;
-            return true;
-        }
-        public bool CreateDatabase(string dbName)
-        {
-            Model.Command.CommandText = $"CREATE DATABASE IF NOT EXISTS `{dbName}`; USE `{dbName}`;";
-
-            try { Model.Command.ExecuteNonQuery(); }
-            catch (MySql.Data.MySqlClient.MySqlException)
-            {
-                ActionsView.Message = $"The database named \"{dbName}\" couldn't be created.";
-                ActionsView.Title = "Error";
-                ActionsView.Icon = MessageBoxIcon.Error;
-                return false;
-            }
-
-            ActionsView.Message = $"Created database \"{dbName}\" and currently using it.";
-            ActionsView.Title = "Success";
-            ActionsView.Icon = MessageBoxIcon.Information;
-            Model.CurrentDB = dbName;
-            return true;
+            ActionsView.Message = $"Your database's name cannot be less than 2 characters";
+            ActionsView.Title = "Error";
+            ActionsView.Icon = MessageBoxIcon.Error;
+            return false;
         }
 
         public bool DeleteDatabase()
@@ -121,45 +118,17 @@ namespace MirkoSale_MySQL
             ActionsView.Title = "Success";
             ActionsView.Icon = MessageBoxIcon.Information;
             Model.CurrentDB = null;
-            Model.CurrentTable = null; 
+            Model.CurrentTable = null;
             return true;
         }
 
-        public bool SelectTable(string tableName)
+
+
+        public bool CreateTable(string tableNameNotCheck)
         {
-            if (Model.CurrentDB != null && tableName.Length >= 2)
-            {
-                Model.Command.CommandText = $"SELECT * FROM `{tableName}`;" ;
+            string tableName = tableNameNotCheck.Trim();
 
-                try
-                {
-                    ActionsView.ReturnLog(Model.Command.CommandText);
-                    Model.Command.ExecuteNonQuery();
-                }
-                catch (MySql.Data.MySqlClient.MySqlException)
-                {
-                    ActionsView.Message = $"The table named \"{tableName}\" couldn't be selected.";
-                    ActionsView.Title = "Error";
-                    ActionsView.Icon = MessageBoxIcon.Error;
-                    return false;
-                }
-
-                Model.CurrentTable = tableName;
-                ActionsView.Message = $"The table named \"{tableName}\" was selected succesfully";
-                ActionsView.Title = "Success";
-                ActionsView.Icon = MessageBoxIcon.Information;
-                return true;
-            }
-
-            ActionsView.Message = $"You need to be using a database before you can create a table";
-            ActionsView.Title = "Error";
-            ActionsView.Icon = MessageBoxIcon.Error;
-            return false;
-        }
-
-        public bool CreateTable(string tableName)
-        {
-            if (Model.CurrentDB != null && tableName.Length >= 2)
+            if (tableName.Length >= 2)
             {
                 string tableId;
                 if (tableName[1] == '_')
@@ -172,7 +141,7 @@ namespace MirkoSale_MySQL
                 }
 
 
-                Model.Command.CommandText = $"CREATE TABLE `{tableName}` (`{tableId}` int(13) NOT NULL AUTO_INCREMENT,PRIMARY KEY (`{tableId}`));";
+                Model.Command.CommandText = $"CREATE TABLE `{Model.CurrentDB}`.`{tableName}` (`{tableId}` int(13) NOT NULL AUTO_INCREMENT,PRIMARY KEY (`{tableId}`));";
 
                 try
                 {
@@ -194,7 +163,7 @@ namespace MirkoSale_MySQL
                 return true;
             }
 
-            ActionsView.Message = $"You need to be using a database before you can create a table";
+            ActionsView.Message = $"Your table's name cannot be less than 2 characters";
             ActionsView.Title = "Error";
             ActionsView.Icon = MessageBoxIcon.Error;
             return false;
@@ -202,7 +171,7 @@ namespace MirkoSale_MySQL
 
         public bool DeleteTable()
         {
-            Model.Command.CommandText = $"DROP TABLE `{Model.CurrentTable}`;";
+            Model.Command.CommandText = $"DROP TABLE `{Model.CurrentDB}`.`{Model.CurrentTable}`;";
 
             try { Model.Command.ExecuteNonQuery(); }
             catch (MySql.Data.MySqlClient.MySqlException)
@@ -251,6 +220,18 @@ namespace MirkoSale_MySQL
             }
             reader.Close();
             return tables;
+        }
+
+        public void ChangeCheckboxState()
+        {
+            if (MessageBoxes)
+            {
+                MessageBoxes = false;
+            }
+            else
+            {
+                MessageBoxes = true;
+            }
         }
     }
 }

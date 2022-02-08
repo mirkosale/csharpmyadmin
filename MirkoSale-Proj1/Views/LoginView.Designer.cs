@@ -33,6 +33,7 @@
             this.txbPassword = new System.Windows.Forms.TextBox();
             this.lblUser = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
+            this.cbxMessages = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnConnect
@@ -78,11 +79,24 @@
             this.lblPassword.TabIndex = 7;
             this.lblPassword.Text = "Password";
             // 
+            // cbxMessages
+            // 
+            this.cbxMessages.AutoSize = true;
+            this.cbxMessages.Location = new System.Drawing.Point(209, 143);
+            this.cbxMessages.Name = "cbxMessages";
+            this.cbxMessages.Size = new System.Drawing.Size(74, 17);
+            this.cbxMessages.TabIndex = 22;
+            this.cbxMessages.Text = "Messages";
+            this.cbxMessages.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.cbxMessages.UseVisualStyleBackColor = true;
+            this.cbxMessages.CheckedChanged += new System.EventHandler(this.CbxMessages_CheckedChanged);
+            // 
             // LoginView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(295, 193);
+            this.Controls.Add(this.cbxMessages);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.txbPassword);
@@ -105,5 +119,6 @@
         private System.Windows.Forms.TextBox txbPassword;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.Label lblPassword;
+        private System.Windows.Forms.CheckBox cbxMessages;
     }
 }

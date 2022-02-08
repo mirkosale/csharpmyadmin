@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
 {
-    public partial class LoginView : Form
+    public partial class TableView : Form
     {
         private MainController _controller;
         public string Title { get; set; }
@@ -20,27 +20,25 @@ namespace MirkoSale_MySQL
 
         public MainController Controller { get => _controller; set => _controller = value; }
 
-        public LoginView()
+        public TableView()
         {
             InitializeComponent();
         }
 
-        private void BtnConnect_Click(object sender, EventArgs e)
+        private void BtnCr_Click(object sender, EventArgs e)
         {
-            if (Controller.Connect(txbUsername.Text, txbPassword.Text))
-            {
-                _controller.ActionsView.Show();
-                this.Hide();
-                txbUsername.Clear();
-            }
-            txbPassword.Clear();
             MessageBox.Show(Message, Title, Button, Icon);
+        }
 
+        public void WriteMessage()
+        {
+            if (Controller.MessageBoxes)
+                MessageBox.Show(Message, Title, Button, Icon);
         }
 
         private void CbxMessages_CheckedChanged(object sender, EventArgs e)
         {
-            
+            Controller.ChangeCheckboxState();
         }
     }
 }

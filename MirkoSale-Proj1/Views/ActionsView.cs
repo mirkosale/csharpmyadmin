@@ -17,7 +17,6 @@ namespace MirkoSale_MySQL
         public string Message;
         const MessageBoxButtons Button = MessageBoxButtons.OK;
         public MessageBoxIcon Icon;
-        private bool _messages = true;
 
         public MainController Controller { get => _controller; set => _controller = value; }
 
@@ -26,111 +25,14 @@ namespace MirkoSale_MySQL
             InitializeComponent();
         }
 
-        private void ActionsView_Load(object sender, EventArgs e)
-        {
-            UpdateCurrentDB(true);
-        }
-
-        private void ActionsView_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Controller.LoginView.Close();
-        }
-
-        private void Disconnect_Click(object sender, EventArgs e)
-        {
-            Controller.Disconnect();
-
-            txbDBName.Clear();
-            txbTableName.Clear();
-            lblCurrentDB.Text = "Currently using : none";
-            _controller.LoginView.Show();
-            this.Hide();
-        }
-
-        public void ReturnLog(string log)
-        {
-            lblLog.Text = log;
-        }
-
-        private void BtnSelectDB_Click(object sender, EventArgs e)
-        {
-            if (Controller.SelectDatabase(txbDBName.Text))
-            {
-                lblCurrentDB.Text = $"Currently using : {Controller.Model.CurrentDB}";
-                txbDBName.Clear();
-                btnDeleteDB.Enabled = true;
-                btnCreateTable.Enabled = true;
-            }
-            WriteMessage();
-        }
-
-        private void BtnCreateDB_Click(object sender, EventArgs e)
-        {
-            if (Controller.CreateDatabase(txbDBName.Text))
-            {
-                UpdateCurrentDB(false);
-
-            }
-            WriteMessage();
-        }
-
-        private void BtnDeleteDB_Click(object sender, EventArgs e)
-        {
-            if (Controller.DeleteDatabase())
-            {
-                UpdateCurrentDB(true);
-            }
-            WriteMessage();
-            UpdateList();
-        }
-        private void BtnSelectTable_Click(object sender, EventArgs e)
-        {
-            if (Controller.SelectTable(txbTableName.Text))
-            {
-                txbTableName.Clear();
-                lblCurrentTable.Text = $"Currently using : {Controller.Model.CurrentTable}";
-                btnDeleteTable.Enabled = true;
-            }
-            WriteMessage();
-        }
-
-        private void BtnCreateTable_Click(object sender, EventArgs e)
-        {
-            if (Controller.CreateTable(txbTableName.Text))
-            {
-                txbTableName.Clear();
-                lblCurrentTable.Text = $"Currently using : {Controller.Model.CurrentTable}";
-                btnDeleteTable.Enabled = true;
-            }
-            WriteMessage();
-            UpdateList();
-        }
-
-        private void BtnDeleteTable_Click(object sender, EventArgs e)
-        {
-            if (Controller.DeleteTable())
-            {
-                lblCurrentTable.Text = $"Currently using : none";
-                btnDeleteTable.Enabled = false;
-            }
-            WriteMessage();
-            UpdateList();
-        }
-
-        private void ListDatabases_Databases(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            btnDeleteDB.Enabled = true;
-            Controller.Model.CurrentDB = e.Node.Text;
-
-        }
 
         public void WriteMessage()
         {
-            if (_messages)
-            MessageBox.Show(Message, Title, Button, Icon);
+            if (Controller.MessageBoxes)
+                MessageBox.Show(Message, Title, Button, Icon);
         }
 
-        public void UpdateCurrentDB(bool deleted)
+        public void UpdateCurrentDB(bool deleted = false, bool updateList = false)
         {
             if (!deleted)
             {
@@ -148,8 +50,27 @@ namespace MirkoSale_MySQL
                 btnDeleteTable.Enabled = false;
             }
 
-            UpdateList();
+            if (updateList)
+                UpdateList();
         }
+
+        public void UpdateCurrentTable(bool deleted = false, bool updateList = false)
+        {
+            if (!deleted)
+            {
+                txbTableName.Clear();
+                lblCurrentTable.Text = $"Currently using : {Controller.Model.CurrentTable}";
+                btnDeleteTable.Enabled = true;
+            }
+            else
+            {
+                lblCurrentTable.Text = $"Currently using : none";
+                btnDeleteTable.Enabled = false;
+            }
+            if (updateList)
+                UpdateList();
+        }
+
         public void UpdateList()
         {
             listDatabases.Nodes.Clear();
@@ -169,19 +90,94 @@ namespace MirkoSale_MySQL
             }
         }
 
-
-
-        private void Messages_CheckedChanged(object sender, EventArgs e)
+        public void ReturnLog(string log)
         {
-            if (_messages)
+            lblLog.Text = log;
+        }
+
+        private void ActionsView_Load(object sender, EventArgs e)
+        {
+            UpdateCurrentDB(true, true);
+        }
+
+        private void ActionsView_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Controller.LoginView.Close();
+        }
+
+        private void Disconnect_Click(object sender, EventArgs e)
+        {
+            Controller.Disconnect();
+            _controller.LoginView.Show();
+            this.Hide();
+        }
+
+        private void BtnCreateDB_Click(object sender, EventArgs e)
+        {
+            if (Controller.CreateDatabase(txbDBName.Text))
             {
-                _messages = false;
+                UpdateCurrentDB(false, true);
+            }
+            WriteMessage();
+        }
+
+        private void BtnDeleteDB_Click(object sender, EventArgs e)
+        {
+            if (Controller.DeleteDatabase())
+            {
+                UpdateCurrentDB(true);
+                UpdateCurrentTable(true, true);
+            }
+            WriteMessage();
+        }
+
+        private void BtnCreateTable_Click(object sender, EventArgs e)
+        {
+            if (Controller.CreateTable(txbTableName.Text))
+            {
+                UpdateCurrentTable(false, true);
+
+            }
+            WriteMessage();
+        }
+
+        private void BtnDeleteTable_Click(object sender, EventArgs e)
+        {
+            if (Controller.DeleteTable())
+            {
+                UpdateCurrentTable(true, true);
+
+            }
+            WriteMessage();
+        }
+
+        private void ListDatabases_Click(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Parent == null)
+            {
+                Controller.Model.CurrentDB = e.Node.Text;
+                UpdateCurrentDB();
             }
             else
             {
-                _messages = true;
+                Controller.Model.CurrentDB = e.Node.Parent.Text;
+                Controller.Model.CurrentTable = e.Node.Text;
+                UpdateCurrentDB();
+                UpdateCurrentTable();
             }
         }
 
+        private void ListDatabases_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Parent == null)
+            {
+                Controller.TableView.Show();
+            }
+        }
+
+        private void Messages_CheckedChanged(object sender, EventArgs e)
+        {
+            Controller.ChangeCheckboxState();
+        }
     }
 }
