@@ -71,16 +71,7 @@ namespace MirkoSale_MySQL
 
             foreach (List<string> r in rows)
             {
-                string row = "{";
-
-                foreach (string s in r)
-                {
-                    row+= $"{s};";
-                }
-
-                row += "}";
-                listTable.Rows.Add(row);
-
+                listTable.Rows.Add(r.ToArray());
             }
         }
 

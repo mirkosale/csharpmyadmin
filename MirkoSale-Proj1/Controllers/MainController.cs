@@ -214,22 +214,23 @@ namespace MirkoSale_MySQL
             _model.Command.CommandText = $"USE `{_model.CurrentDB}`; SELECT * FROM `{_model.CurrentTable}`;";
 
             reader = _model.Command.ExecuteReader();
-            for (int i = 0; i < rowNumber; i++)
+            byte x = 0;
+            while (reader.Read())
             {
-                byte x = 0;
                 rows.Add(new List<string>());
-                while (reader.Read())
+
+                for (int i = 0; i < rowNumber; i++)
                 {
-                    rows[i].Add(reader.GetString(x));
-                    x++;
+                    rows[x].Add(reader.GetString(i));   
                 }
+                x++;
             }
 
             reader.Close();
             return rows;
         }
 
-            public List<string> UpdateDatabases()
+        public List<string> UpdateDatabases()
         {
             List<string> databases = new List<string>();
             MySql.Data.MySqlClient.MySqlDataReader reader;
