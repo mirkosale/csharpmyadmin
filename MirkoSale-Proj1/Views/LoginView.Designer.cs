@@ -41,7 +41,7 @@
             this.btnConnect.Location = new System.Drawing.Point(103, 139);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(75, 23);
-            this.btnConnect.TabIndex = 1;
+            this.btnConnect.TabIndex = 2;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
@@ -51,7 +51,7 @@
             this.txbUsername.Location = new System.Drawing.Point(157, 29);
             this.txbUsername.Name = "txbUsername";
             this.txbUsername.Size = new System.Drawing.Size(100, 20);
-            this.txbUsername.TabIndex = 2;
+            this.txbUsername.TabIndex = 0;
             // 
             // txbPassword
             // 
@@ -59,7 +59,7 @@
             this.txbPassword.Name = "txbPassword";
             this.txbPassword.PasswordChar = '*';
             this.txbPassword.Size = new System.Drawing.Size(100, 20);
-            this.txbPassword.TabIndex = 5;
+            this.txbPassword.TabIndex = 1;
             // 
             // lblUser
             // 
@@ -82,10 +82,12 @@
             // cbxMessages
             // 
             this.cbxMessages.AutoSize = true;
+            this.cbxMessages.Checked = true;
+            this.cbxMessages.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbxMessages.Location = new System.Drawing.Point(209, 143);
             this.cbxMessages.Name = "cbxMessages";
             this.cbxMessages.Size = new System.Drawing.Size(74, 17);
-            this.cbxMessages.TabIndex = 22;
+            this.cbxMessages.TabIndex = 3;
             this.cbxMessages.Text = "Messages";
             this.cbxMessages.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.cbxMessages.UseVisualStyleBackColor = true;
@@ -107,6 +109,7 @@
             this.MinimizeBox = false;
             this.Name = "LoginView";
             this.Text = "CSharpMyAdmin";
+            this.Load += new System.EventHandler(this.LoginView_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

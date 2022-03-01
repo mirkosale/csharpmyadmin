@@ -28,15 +28,16 @@ namespace MirkoSale_MySQL
 
         public void WriteMessage()
         {
-            if (Controller.MessageBoxes)
+            if (_controller.MessageBoxes)
                 MessageBox.Show(Message, Title, Button, Icon);
+            
         }
 
         public void UpdateCurrentDB(bool deleted = false, bool updateList = false)
         {
             if (!deleted)
             {
-                lblCurrentDB.Text = $"Currently using : {Controller.Model.CurrentDB}";
+                lblCurrentDB.Text = $"Currently using : {_controller.Model.CurrentDB}";
                 txbDBName.Clear();
                 btnDeleteDB.Enabled = true;
                 btnCreateTable.Enabled = true;
@@ -56,10 +57,10 @@ namespace MirkoSale_MySQL
 
         public void UpdateCurrentTable(bool deleted = false, bool updateList = false)
         {
-            if (!deleted)
+            if (!deleted && _controller.Model.CurrentTable != null)
             {
                 txbTableName.Clear();
-                lblCurrentTable.Text = $"Currently using : {Controller.Model.CurrentTable}";
+                lblCurrentTable.Text = $"Currently using : {_controller.Model.CurrentTable}";
                 btnDeleteTable.Enabled = true;
             }
             else
@@ -74,12 +75,12 @@ namespace MirkoSale_MySQL
         public void UpdateList()
         {
             listDatabases.Nodes.Clear();
-            List<string> databases = Controller.UpdateDatabases();
+            List<string> databases = _controller.UpdateDatabases();
 
             byte databasecnt = 0;
             foreach (string d in databases)
             {
-                List<string> tables = Controller.UpdateTables(d);
+                List<string> tables = _controller.UpdateTables(d);
                 listDatabases.Nodes.Add(d);
 
                 foreach (string t in tables)
@@ -97,24 +98,24 @@ namespace MirkoSale_MySQL
 
         private void ActionsView_Load(object sender, EventArgs e)
         {
-            UpdateCurrentDB(true, true);
+            _controller.MessageCheckboxes.Add(cbxMessages);
         }
 
         private void ActionsView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Controller.LoginView.Close();
+            _controller.LoginView.Close();
         }
 
         private void Disconnect_Click(object sender, EventArgs e)
         {
-            Controller.Disconnect();
+            _controller.Disconnect();
             _controller.LoginView.Show();
             this.Hide();
         }
 
         private void BtnCreateDB_Click(object sender, EventArgs e)
         {
-            if (Controller.CreateDatabase(txbDBName.Text))
+            if (_controller.CreateDatabase(txbDBName.Text))
             {
                 UpdateCurrentDB(false, true);
             }
@@ -123,7 +124,7 @@ namespace MirkoSale_MySQL
 
         private void BtnDeleteDB_Click(object sender, EventArgs e)
         {
-            if (Controller.DeleteDatabase())
+            if (_controller.DeleteDatabase())
             {
                 UpdateCurrentDB(true);
                 UpdateCurrentTable(true, true);
@@ -133,7 +134,7 @@ namespace MirkoSale_MySQL
 
         private void BtnCreateTable_Click(object sender, EventArgs e)
         {
-            if (Controller.CreateTable(txbTableName.Text))
+            if (_controller.CreateTable(txbTableName.Text))
             {
                 UpdateCurrentTable(false, true);
 
@@ -143,7 +144,7 @@ namespace MirkoSale_MySQL
 
         private void BtnDeleteTable_Click(object sender, EventArgs e)
         {
-            if (Controller.DeleteTable())
+            if (_controller.DeleteTable())
             {
                 UpdateCurrentTable(true, true);
 
@@ -155,29 +156,41 @@ namespace MirkoSale_MySQL
         {
             if (e.Node.Parent == null)
             {
-                Controller.Model.CurrentDB = e.Node.Text;
-                UpdateCurrentDB();
+                _controller.Model.CurrentDB = e.Node.Text;
+                _controller.Model.CurrentTable = null;
             }
             else
             {
-                Controller.Model.CurrentDB = e.Node.Parent.Text;
-                Controller.Model.CurrentTable = e.Node.Text;
-                UpdateCurrentDB();
-                UpdateCurrentTable();
+                _controller.Model.CurrentDB = e.Node.Parent.Text;
+                _controller.Model.CurrentTable = e.Node.Text;
+                
             }
+            UpdateCurrentDB();
+            UpdateCurrentTable();
         }
 
         private void ListDatabases_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node.Parent == null)
+            if (e.Node.Parent != null && Controller.Model.CurrentTable != null)
             {
-                Controller.TableView.Show();
+                _controller.TableView.Open();
             }
         }
 
         private void Messages_CheckedChanged(object sender, EventArgs e)
         {
-            Controller.ChangeCheckboxState();
+            _controller.ChangeCheckboxState(cbxMessages);
+        }
+
+        private void BtnEditTable_Click(object sender, EventArgs e)
+        {
+            _controller.TableView.Open();
+        }
+
+        public void Open()
+        {
+            UpdateCurrentDB(true, true);
+            _controller.ActionsView.Show();
         }
     }
 }

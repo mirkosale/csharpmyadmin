@@ -27,20 +27,31 @@ namespace MirkoSale_MySQL
 
         private void BtnConnect_Click(object sender, EventArgs e)
         {
-            if (Controller.Connect(txbUsername.Text, txbPassword.Text))
+            if (_controller.Connect(txbUsername.Text, txbPassword.Text))
             {
-                _controller.ActionsView.Show();
+                _controller.ActionsView.Open();
                 this.Hide();
                 txbUsername.Clear();
             }
             txbPassword.Clear();
+
+            if (_controller.MessageBoxes)
             MessageBox.Show(Message, Title, Button, Icon);
 
         }
 
         private void CbxMessages_CheckedChanged(object sender, EventArgs e)
         {
-            
+            _controller.ChangeCheckboxState(cbxMessages);
+        }
+
+        private void LoginView_Load(object sender, EventArgs e)
+        {
+            _controller.MessageCheckboxes.Add(cbxMessages);
+            _controller.ActionsView.Show();
+            _controller.TableView.Show();
+            _controller.ActionsView.Hide();
+            _controller.TableView.Hide();
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 
 namespace MirkoSale_MySQL
 {
@@ -21,7 +16,6 @@ namespace MirkoSale_MySQL
         public MySqlConnection Connection { get => _connection; set => _connection = value; }
         public MySqlCommand Command { get => _command; set => _command = value; }
         public string CurrentDB { get; set; }
-
         public string CurrentTable { get; set; }
     }
 }
