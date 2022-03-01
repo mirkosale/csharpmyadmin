@@ -47,7 +47,6 @@ namespace MirkoSale_MySQL
 			else
 				cbxMessages.Checked = false;
             _controller.TableView.Show();
-			
         }
 
         public byte UpdateFields()

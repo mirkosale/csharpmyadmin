@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data;
+using MySql.Data.MySqlClient;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -38,14 +38,76 @@ namespace MirkoSale_MySQL
         public bool MessageBoxes { get => _messageBoxes; }
         public List<CheckBox> MessageCheckboxes { get => _messageCheckboxes; set => _messageCheckboxes = value; }
 
+
+        public bool ExecuteCommand(string query)
+        {
+            _model.Command.CommandText = query;
+            try
+            {
+                _model.Command.ExecuteNonQuery();
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public List<string> ExecuteSimpleQuery(string query)
+        {
+            List<string> list = new List<string>();
+            MySqlDataReader reader;
+            _model.Command.CommandText = query;
+
+            reader = _model.Command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                list.Add(reader.GetString(0));
+            }
+            reader.Close();
+            return list;
+        }
+        public List<List<string>> ExecutePrepareQuery(string query, byte rowNumber)
+        {
+            List<List<string>> list = new List<List<string>>();
+            MySqlDataReader reader;
+            _model.Command.CommandText = query;
+
+            reader = _model.Command.ExecuteReader();
+
+            byte x = 0;
+            while (reader.Read())
+            {
+                list.Add(new List<string>());
+
+                for (int i = 0; i < rowNumber; i++)
+                {
+                    try
+                    {
+                        list[x].Add(reader.GetString(i));
+                    }
+                    catch (System.Data.SqlTypes.SqlNullValueException)
+                    {
+                        list[x].Add("NULL");
+                    }
+                }
+                x++;
+            }
+
+            reader.Close();
+            return list;
+        }
+
         public bool Connect(string user, string password)
         {
             try
             {
-                _model.Connection = new MySql.Data.MySqlClient.MySqlConnection($"server=localhost;user={user};database=mysql;port=3306;password={password}");
+                _model.Connection = new MySqlConnection($"server=localhost;user={user};database=mysql;port=3306;password={password}");
                 _model.Connection.Open();
             }
-            catch (MySql.Data.MySqlClient.MySqlException)
+            catch (MySqlException)
             {
                 _loginView.Message = "The connexion couldn't be established";
                 _loginView.Title = "Error";
@@ -55,7 +117,7 @@ namespace MirkoSale_MySQL
 
                 return false;
             }
-            _model.Command = new MySql.Data.MySqlClient.MySqlCommand() { Connection = _model.Connection };
+            _model.Command = new MySqlCommand() { Connection = _model.Connection };
             _loginView.Message = "The connexion was established";
             _loginView.Title = "Success";
             _loginView.Icon = MessageBoxIcon.Information;
@@ -79,10 +141,7 @@ namespace MirkoSale_MySQL
 
             if (dbName.Length >= 1)
             {
-                _model.Command.CommandText = $"CREATE DATABASE IF NOT EXISTS `{dbName}`; USE `{dbName}`;";
-
-                try { _model.Command.ExecuteNonQuery(); }
-                catch (MySql.Data.MySqlClient.MySqlException)
+                if (!ExecuteCommand($"CREATE DATABASE IF NOT EXISTS `{dbName}`; USE `{dbName}`;"))
                 {
                     _actionsView.Message = $"The database named \"{dbName}\" couldn't be created.";
                     _actionsView.Title = "Error";
@@ -105,11 +164,9 @@ namespace MirkoSale_MySQL
 
         public bool DeleteDatabase()
         {
-            _model.Command.CommandText = $"DROP DATABASE `{_model.CurrentDB}`;";
-
-            try { _model.Command.ExecuteNonQuery(); }
-            catch (MySql.Data.MySqlClient.MySqlException)
+            if (!ExecuteCommand($"DROP DATABASE `{_model.CurrentDB}`;"))
             {
+
                 _actionsView.Message = $"The database named \"{_model.CurrentDB}\" couldn't be deleted.";
                 _actionsView.Title = "Error";
                 _actionsView.Icon = MessageBoxIcon.Error;
@@ -142,15 +199,7 @@ namespace MirkoSale_MySQL
                     tableId = $"id{ tableName.Substring(0, 1).ToUpper() + tableName.Substring(1, tableName.Length - 1)}";
                 }
 
-
-                _model.Command.CommandText = $"CREATE TABLE `{_model.CurrentDB}`.`{tableName}` (`{tableId}` int(13) NOT NULL AUTO_INCREMENT,PRIMARY KEY (`{tableId}`));";
-
-                try
-                {
-                    _actionsView.ReturnLog(_model.Command.CommandText);
-                    _model.Command.ExecuteNonQuery();
-                }
-                catch (MySql.Data.MySqlClient.MySqlException)
+                if (!ExecuteCommand($"CREATE TABLE `{_model.CurrentDB}`.`{tableName}` (`{tableId}` int(13) NOT NULL AUTO_INCREMENT,PRIMARY KEY (`{tableId}`));"))
                 {
                     _actionsView.Message = $"The table named \"{tableName}\" couldn't be created.";
                     _actionsView.Title = "Error";
@@ -173,10 +222,7 @@ namespace MirkoSale_MySQL
 
         public bool DeleteTable()
         {
-            _model.Command.CommandText = $"DROP TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}`;";
-
-            try { _model.Command.ExecuteNonQuery(); }
-            catch (MySql.Data.MySqlClient.MySqlException)
+            if (!ExecuteCommand($"DROP TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}`;"))
             {
                 _actionsView.Message = $"The table named \"{_model.CurrentTable}\" couldn't be deleted.";
                 _actionsView.Title = "Error";
@@ -191,83 +237,37 @@ namespace MirkoSale_MySQL
             return true;
         }
 
-        public List<string> GetTableFields()
-        {
-            List<string> fields = new List<string>();
-            MySql.Data.MySqlClient.MySqlDataReader reader;
-            _model.Command.CommandText = $"USE `{_model.CurrentDB}`; DESCRIBE `{_model.CurrentTable}`;";
-
-            reader = _model.Command.ExecuteReader();
-            while (reader.Read())
-            {
-                fields.Add(reader.GetString(0));
-            }
-
-            reader.Close();
-            return fields;
-        }
-
-        public List<List<string>> GetTableRows(byte rowNumber)
-        {
-            List<List<string>> rows = new List<List<string>>();
-            MySql.Data.MySqlClient.MySqlDataReader reader;
-            _model.Command.CommandText = $"USE `{_model.CurrentDB}`; SELECT * FROM `{_model.CurrentTable}`;";
-
-            reader = _model.Command.ExecuteReader();
-            byte x = 0;
-            while (reader.Read())
-            {
-                rows.Add(new List<string>());
-
-                for (int i = 0; i < rowNumber; i++)
-                {
-                    rows[x].Add(reader.GetString(i));   
-                }
-                x++;
-            }
-
-            reader.Close();
-            return rows;
-        }
-
         public List<string> UpdateDatabases()
         {
-            List<string> databases = new List<string>();
-            MySql.Data.MySqlClient.MySqlDataReader reader;
-
-            _model.Command.CommandText = $"SHOW DATABASES;";
-
-            reader = _model.Command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                databases.Add(reader.GetString(0));
-            }
-
-            reader.Close();
+            List<string> databases = ExecuteSimpleQuery($"SHOW DATABASES;");
 
             return databases;
         }
 
         public List<string> UpdateTables(string database)
         {
-            List<string> tables = new List<string>();
-            MySql.Data.MySqlClient.MySqlDataReader reader;
-            _model.Command.CommandText = $"USE `{database}`; SHOW TABLES;";
-
-            reader = _model.Command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                tables.Add(reader.GetString(0));
-            }
-            reader.Close();
+            List<string> tables = ExecuteSimpleQuery($"USE `{database}`; SHOW TABLES;");
+            
             return tables;
+        }
+
+        public List<string> GetTableFields()
+        {
+            List<string> fields = ExecuteSimpleQuery($"USE `{_model.CurrentDB}`; DESCRIBE `{_model.CurrentTable}`;");
+
+            return fields;
+        }
+
+        public List<List<string>> GetTableRows(byte rowNumber)
+        {
+            List<List<string>> rows = ExecutePrepareQuery($"USE `{_model.CurrentDB}`; SELECT * FROM `{_model.CurrentTable}`;", rowNumber);
+
+            return rows;
         }
 
         public void ChangeCheckboxState(CheckBox tempCheckbox)
         {
-            if (tempCheckbox.Checked == true)
+            if (tempCheckbox.Checked == true && _messageBoxes == true)
             {
                 foreach (CheckBox c in _messageCheckboxes)
                 {
