@@ -172,6 +172,7 @@
             // 
             // btnEditTable
             // 
+            this.btnEditTable.Enabled = false;
             this.btnEditTable.Location = new System.Drawing.Point(25, 196);
             this.btnEditTable.Name = "btnEditTable";
             this.btnEditTable.Size = new System.Drawing.Size(136, 22);
@@ -184,7 +185,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1033, 597);
+            this.ClientSize = new System.Drawing.Size(523, 597);
             this.Controls.Add(this.btnEditTable);
             this.Controls.Add(this.cbxMessages);
             this.Controls.Add(this.listDatabases);

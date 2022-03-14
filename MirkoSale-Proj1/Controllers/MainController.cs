@@ -69,6 +69,13 @@ namespace MirkoSale_MySQL
             reader.Close();
             return list;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query">SQL query / command</param>
+        /// <param name="rowNumber">The number of the row you're getting the data from</param>
+        /// <returns></returns>
         public List<List<string>> ExecutePrepareQuery(string query, byte rowNumber)
         {
             List<List<string>> list = new List<List<string>>();
@@ -100,8 +107,15 @@ namespace MirkoSale_MySQL
             return list;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user">User of DB</param>
+        /// <param name="password">Password of Database</param>
+        /// <returns>Boolean if connected or not</returns>
         public bool Connect(string user, string password)
         {
+            ///Check for errors during the connection and returns
             try
             {
                 _model.Connection = new MySqlConnection($"server=localhost;user={user};database=mysql;port=3306;password={password}");
@@ -127,11 +141,15 @@ namespace MirkoSale_MySQL
             return true;
         }
 
+
+        /// <summary>
+        /// Closes the connection and changes the message of the Message box.
+        /// </summary>
         public void Disconnect()
         {
             _model.Connection.Close();
             _model.Logged = false;
-            _actionsView.Message = "You have disconnected.";
+            _actionsView.Message = "You have been disconnected.";
             _actionsView.Title = "Success";
             _actionsView.Icon = MessageBoxIcon.Information;
         }
@@ -237,6 +255,38 @@ namespace MirkoSale_MySQL
             return true;
         }
 
+        public bool DeleteColumn(string column)
+        {
+            if (!ExecuteCommand($"ALTER TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}` DROP COLUMN {column};"))
+            {
+                _actionsView.Message = $"The column named \"{column}\" couldn't be deleted.";
+                _actionsView.Title = "Error";
+                _actionsView.Icon = MessageBoxIcon.Error;
+                return false;
+            }
+
+            _actionsView.Message = $"The column \"{column}\" was successfully deleted.";
+            _actionsView.Title = "Success";
+            _actionsView.Icon = MessageBoxIcon.Information;
+            return true;
+        }
+
+        public bool DeleteRow(string rowId)
+        {
+            List<string> columns = GetTableFields();
+            if (!ExecuteCommand($"DELETE FROM `{_model.CurrentDB}`.`{_model.CurrentTable}` WHERE {columns[0]} = {rowId};"))
+            {
+                _actionsView.Message = $"The row with the ID \"{rowId}\" couldn't be deleted.";
+                _actionsView.Title = "Error";
+                _actionsView.Icon = MessageBoxIcon.Error;
+                return false;
+            }
+
+            _actionsView.Message = $"The row with the ID \"{rowId}\" was successfully deleted.";
+            _actionsView.Title = "Success";
+            _actionsView.Icon = MessageBoxIcon.Information;
+            return true;
+        }
         public List<string> UpdateDatabases()
         {
             List<string> databases = ExecuteSimpleQuery($"SHOW DATABASES;");

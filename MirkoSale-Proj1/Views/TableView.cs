@@ -42,10 +42,10 @@ namespace MirkoSale_MySQL
             listTable.Columns.Clear();
             byte rowNbr = UpdateFields();
             UpdateRows(rowNbr);
-			if (_controller.MessageBoxes)
-				cbxMessages.Checked = true;
-			else
-				cbxMessages.Checked = false;
+            if (_controller.MessageBoxes)
+                cbxMessages.Checked = true;
+            else
+                cbxMessages.Checked = false;
             _controller.TableView.Show();
         }
 
@@ -94,6 +94,61 @@ namespace MirkoSale_MySQL
         private void BtnAddColumn_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ListTable_MouseClick(object sender, MouseEventArgs e)
+        {
+            ///SRC https://stackoverflow.com/questions/1718389/right-click-context-menu-for-datagridview
+            if (e.Button == MouseButtons.Right)
+            {
+                ContextMenu deleteMenu = new ContextMenu();
+                string currentMouseOverRow = null;
+                string currentMouseOverColumn = null;
+                bool noRightClick = false;
+                try
+                {
+                    currentMouseOverRow = listTable[0, listTable.HitTest(e.X, e.Y).RowIndex].Value.ToString();
+                    currentMouseOverColumn = listTable[listTable.HitTest(e.X, e.Y).ColumnIndex, 0].Value.ToString();
+                }
+                catch
+                {
+                    noRightClick = true; 
+                }
+
+                if (!noRightClick)
+                {
+                    MenuItem deleteRow = new MenuItem($"Delete Row {currentMouseOverRow}");
+                    MenuItem deleteColumn = new MenuItem($"Delete Column {currentMouseOverColumn}");
+                    deleteRow.Click += DeleteRow_Click;
+                    deleteColumn.Click += DeleteColumn_Click;
+
+                    deleteMenu.MenuItems.Add(deleteRow);
+                    deleteMenu.MenuItems.Add(deleteColumn);
+
+
+                    deleteMenu.Show(listTable, new Point(e.X, e.Y));
+                }
+            }
+        }
+
+        private void DeleteRow_Click(object sender, EventArgs e)
+        {
+            MenuItem obj = (MenuItem)sender;
+
+            ///ALT 255
+            string[] row = obj.Text.Split(' ');
+
+            Controller.DeleteRow(row[1]);
+        }
+
+        private void DeleteColumn_Click(object sender, EventArgs e)
+        {
+            MenuItem obj = (MenuItem)sender;
+
+            ///ALT 255
+            string[] column = obj.Text.Split(' ');
+
+            Controller.DeleteColumn(column[1]);
         }
     }
 }

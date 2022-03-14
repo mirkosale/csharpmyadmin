@@ -67,17 +67,21 @@
             this.btnAddColumn.Name = "btnAddColumn";
             this.btnAddColumn.Size = new System.Drawing.Size(75, 23);
             this.btnAddColumn.TabIndex = 26;
-            this.btnAddColumn.Text = "button1";
+            this.btnAddColumn.Text = "Add column";
             this.btnAddColumn.UseVisualStyleBackColor = true;
             this.btnAddColumn.Click += new System.EventHandler(this.BtnAddColumn_Click);
             // 
             // listTable
             // 
+            this.listTable.AllowUserToAddRows = false;
+            this.listTable.AllowUserToDeleteRows = false;
             this.listTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.listTable.Location = new System.Drawing.Point(12, 12);
             this.listTable.Name = "listTable";
+            this.listTable.ReadOnly = true;
             this.listTable.Size = new System.Drawing.Size(936, 415);
             this.listTable.TabIndex = 27;
+            this.listTable.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListTable_MouseClick);
             // 
             // TableView
             // 

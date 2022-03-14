@@ -48,7 +48,6 @@ namespace MirkoSale_MySQL
                 txbDBName.Clear();
                 btnDeleteDB.Enabled = false;
                 btnCreateTable.Enabled = false;
-                btnDeleteTable.Enabled = false;
             }
 
             if (updateList)
@@ -62,11 +61,13 @@ namespace MirkoSale_MySQL
                 txbTableName.Clear();
                 lblCurrentTable.Text = $"Currently using : {_controller.Model.CurrentTable}";
                 btnDeleteTable.Enabled = true;
+                btnEditTable.Enabled = true;
             }
             else
             {
                 lblCurrentTable.Text = $"Currently using : none";
                 btnDeleteTable.Enabled = false;
+                btnEditTable.Enabled = false;
             }
             if (updateList)
                 UpdateList();
@@ -89,11 +90,6 @@ namespace MirkoSale_MySQL
                 }
                 databasecnt++;
             }
-        }
-
-        public void ReturnLog(string log)
-        {
-            lblLog.Text = log;
         }
 
         private void ActionsView_Load(object sender, EventArgs e)
