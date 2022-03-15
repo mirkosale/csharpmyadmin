@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.cbxMessages = new System.Windows.Forms.CheckBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnAddColumn = new System.Windows.Forms.Button();
             this.listTable = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.listTable)).BeginInit();
@@ -49,21 +48,9 @@
             this.cbxMessages.UseVisualStyleBackColor = true;
             this.cbxMessages.CheckedChanged += new System.EventHandler(this.CbxMessages_CheckedChanged);
             // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Varchar",
-            "Int",
-            "Float"});
-            this.comboBox1.Location = new System.Drawing.Point(455, 458);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 25;
-            // 
             // btnAddColumn
             // 
-            this.btnAddColumn.Location = new System.Drawing.Point(475, 485);
+            this.btnAddColumn.Location = new System.Drawing.Point(170, 458);
             this.btnAddColumn.Name = "btnAddColumn";
             this.btnAddColumn.Size = new System.Drawing.Size(75, 23);
             this.btnAddColumn.TabIndex = 26;
@@ -90,7 +77,6 @@
             this.ClientSize = new System.Drawing.Size(960, 562);
             this.Controls.Add(this.listTable);
             this.Controls.Add(this.btnAddColumn);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.cbxMessages);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -107,7 +93,6 @@
 
         #endregion
         private System.Windows.Forms.CheckBox cbxMessages;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button btnAddColumn;
         private System.Windows.Forms.DataGridView listTable;
     }

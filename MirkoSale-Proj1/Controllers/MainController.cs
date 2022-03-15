@@ -15,29 +15,33 @@ namespace MirkoSale_MySQL
         private LoginView _loginView;
         private ActionsView _actionsView;
         private TableView _tableView;
+        private AddTableDataView _addTableDataView;
         private MainModel _model;
 
         private List<CheckBox> _messageCheckboxes = new List<CheckBox>();
         private bool _messageBoxes = true;
-        public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, MainModel model)
+        public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, AddTableDataView addTableDataView, MainModel model)
         {
             _loginView = loginView;
             _actionsView = actionsView;
             _tableView = tableView;
+            _addTableDataView = addTableDataView;
             _model = model;
             loginView.Controller = this;
             actionsView.Controller = this;
             tableView.Controller = this;
+            addTableDataView.Controller = this;
             model.Controller = this;
         }
 
         public ActionsView ActionsView { get => _actionsView; set => _actionsView = value; }
-        public MainModel Model { get => _model; set => _model = value; }
         public LoginView LoginView { get => _loginView; set => _loginView = value; }
         public TableView TableView { get => _tableView; set => _tableView = value; }
+        public AddTableDataView AddTableDataView { get => _addTableDataView; set => _addTableDataView = value; }
+        public MainModel Model { get => _model; set => _model = value; }
+
         public bool MessageBoxes { get => _messageBoxes; }
         public List<CheckBox> MessageCheckboxes { get => _messageCheckboxes; set => _messageCheckboxes = value; }
-
 
         public bool ExecuteCommand(string query)
         {
@@ -46,8 +50,9 @@ namespace MirkoSale_MySQL
             {
                 _model.Command.ExecuteNonQuery();
             }
-            catch (MySqlException)
+            catch (MySqlException e)
             {
+                System.Diagnostics.Debug.Write(e.ToString());
                 return false;
             }
 
@@ -259,15 +264,15 @@ namespace MirkoSale_MySQL
         {
             if (!ExecuteCommand($"ALTER TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}` DROP COLUMN {column};"))
             {
-                _actionsView.Message = $"The column named \"{column}\" couldn't be deleted.";
-                _actionsView.Title = "Error";
-                _actionsView.Icon = MessageBoxIcon.Error;
+                _tableView.Message = $"The column named \"{column}\" couldn't be deleted.";
+                _tableView.Title = "Error";
+                _tableView.Icon = MessageBoxIcon.Error;
                 return false;
             }
 
-            _actionsView.Message = $"The column \"{column}\" was successfully deleted.";
-            _actionsView.Title = "Success";
-            _actionsView.Icon = MessageBoxIcon.Information;
+            _tableView.Message = $"The column \"{column}\" was successfully deleted.";
+            _tableView.Title = "Success";
+            _tableView.Icon = MessageBoxIcon.Information;
             return true;
         }
 
@@ -276,15 +281,15 @@ namespace MirkoSale_MySQL
             List<string> columns = GetTableFields();
             if (!ExecuteCommand($"DELETE FROM `{_model.CurrentDB}`.`{_model.CurrentTable}` WHERE {columns[0]} = {rowId};"))
             {
-                _actionsView.Message = $"The row with the ID \"{rowId}\" couldn't be deleted.";
-                _actionsView.Title = "Error";
-                _actionsView.Icon = MessageBoxIcon.Error;
+                _tableView.Message = $"The row with the ID \"{rowId}\" couldn't be deleted.";
+                _tableView.Title = "Error";
+                _tableView.Icon = MessageBoxIcon.Error;
                 return false;
             }
 
-            _actionsView.Message = $"The row with the ID \"{rowId}\" was successfully deleted.";
-            _actionsView.Title = "Success";
-            _actionsView.Icon = MessageBoxIcon.Information;
+            _tableView.Message = $"The row with the ID \"{rowId}\" was successfully deleted.";
+            _tableView.Title = "Success";
+            _tableView.Icon = MessageBoxIcon.Information;
             return true;
         }
         public List<string> UpdateDatabases()
@@ -317,7 +322,7 @@ namespace MirkoSale_MySQL
 
         public void ChangeCheckboxState(CheckBox tempCheckbox)
         {
-            if (tempCheckbox.Checked == true && _messageBoxes == true)
+            if (tempCheckbox.Checked == true)
             {
                 foreach (CheckBox c in _messageCheckboxes)
                 {

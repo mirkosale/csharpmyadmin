@@ -93,7 +93,7 @@ namespace MirkoSale_MySQL
 
         private void BtnAddColumn_Click(object sender, EventArgs e)
         {
-
+            _controller.AddTableDataView.Open();
         }
 
         private void ListTable_MouseClick(object sender, MouseEventArgs e)
@@ -104,30 +104,44 @@ namespace MirkoSale_MySQL
                 ContextMenu deleteMenu = new ContextMenu();
                 string currentMouseOverRow = null;
                 string currentMouseOverColumn = null;
-                bool noRightClick = false;
+                bool noRows = false;
+                bool noColumns = false;
                 try
                 {
                     currentMouseOverRow = listTable[0, listTable.HitTest(e.X, e.Y).RowIndex].Value.ToString();
-                    currentMouseOverColumn = listTable[listTable.HitTest(e.X, e.Y).ColumnIndex, 0].Value.ToString();
                 }
                 catch
                 {
-                    noRightClick = true; 
+                    noRows = true;
                 }
 
-                if (!noRightClick)
+                try
+                { 
+                    currentMouseOverColumn = listTable.Columns[listTable.HitTest(e.X, e.Y).ColumnIndex].Name;
+                }
+                catch
+                {
+                    noColumns = true;
+                }
+
+                if (!noRows)
                 {
                     MenuItem deleteRow = new MenuItem($"Delete Row {currentMouseOverRow}");
-                    MenuItem deleteColumn = new MenuItem($"Delete Column {currentMouseOverColumn}");
                     deleteRow.Click += DeleteRow_Click;
-                    deleteColumn.Click += DeleteColumn_Click;
-
                     deleteMenu.MenuItems.Add(deleteRow);
-                    deleteMenu.MenuItems.Add(deleteColumn);
-
-
-                    deleteMenu.Show(listTable, new Point(e.X, e.Y));
                 }
+
+                if (!noColumns)
+                {
+                    MenuItem deleteColumn = new MenuItem($"Delete Column {currentMouseOverColumn}");
+                    deleteColumn.Click += DeleteColumn_Click;
+                    deleteMenu.MenuItems.Add(deleteColumn);
+                }
+
+                if (!(noRows && noColumns))
+                {
+                    deleteMenu.Show(listTable, new Point(e.X, e.Y));
+                }   
             }
         }
 
@@ -139,6 +153,10 @@ namespace MirkoSale_MySQL
             string[] row = obj.Text.Split(' ');
 
             Controller.DeleteRow(row[1]);
+
+            WriteMessage();
+
+            Open();
         }
 
         private void DeleteColumn_Click(object sender, EventArgs e)
@@ -149,6 +167,15 @@ namespace MirkoSale_MySQL
             string[] column = obj.Text.Split(' ');
 
             Controller.DeleteColumn(column[1]);
+
+            WriteMessage();
+
+            Open();
+        }
+
+        private void TableView_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

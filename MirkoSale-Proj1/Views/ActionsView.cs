@@ -29,8 +29,7 @@ namespace MirkoSale_MySQL
         public void WriteMessage()
         {
             if (_controller.MessageBoxes)
-                MessageBox.Show(Message, Title, Button, Icon);
-            
+                MessageBox.Show(Message, Title, Button, Icon);   
         }
 
         public void UpdateCurrentDB(bool deleted = false, bool updateList = false)
@@ -143,8 +142,8 @@ namespace MirkoSale_MySQL
             if (_controller.DeleteTable())
             {
                 UpdateCurrentTable(true, true);
-
             }
+
             WriteMessage();
         }
 

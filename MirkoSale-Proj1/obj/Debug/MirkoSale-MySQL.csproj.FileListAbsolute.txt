@@ -67,3 +67,4 @@ F:\01-Projets\042-P_GesProj2\Projets\MirkoSale-Proj1\MirkoSale-Proj1\obj\Debug\M
 F:\01-Projets\042-P_GesProj2\Projets\MirkoSale-Proj1\MirkoSale-Proj1\obj\Debug\MirkoSale-Proj1.exe
 F:\01-Projets\042-P_GesProj2\Projets\MirkoSale-Proj1\MirkoSale-Proj1\obj\Debug\MirkoSale-Proj1.pdb
 F:\01-Projets\042-P_GesProj2\Projets\MirkoSale-Proj1\MirkoSale-Proj1\obj\Debug\MirkoSale_MySQL.TableView.resources
+F:\01-Projets\042-P_GesProj2\Projets\MirkoSale-Proj1\MirkoSale-Proj1\obj\Debug\MirkoSale_MySQL.AddTableDataView.resources
