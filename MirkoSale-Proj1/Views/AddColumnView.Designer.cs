@@ -1,6 +1,6 @@
 ﻿namespace MirkoSale_MySQL
 {
-    partial class AddTableDataView
+    partial class AddColumnView
     {
         /// <summary>
         /// Required designer variable.

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
 {
-    public partial class AddTableDataView : Form
+    public partial class AddColumnView : Form
     {
         private MainController _controller;
         public string Title { get; set; }
@@ -20,7 +20,7 @@ namespace MirkoSale_MySQL
 
         public MainController Controller { get => _controller; set => _controller = value; }
 
-        public AddTableDataView()
+        public AddColumnView()
         {
             InitializeComponent();
         }
@@ -34,7 +34,7 @@ namespace MirkoSale_MySQL
             else
                 cbxMessages.Checked = false;
 
-            _controller.AddTableDataView.Show();
+            _controller.AddColumnView.Show();
         }
 
         public void WriteMessage()
@@ -56,15 +56,22 @@ namespace MirkoSale_MySQL
             int length;
             Int32.TryParse(txbLength.Text.Trim(), out length);
 
-            _controller.AddColumn(name, type, length);
-            _controller.TableView.Open();
+
+            if (_controller.AddColumn(name, type, length))
+            {
+                _controller.TableView.Open();
+                txbColumnName.Clear();
+                txbLength.Clear();
+            }
             WriteMessage();
         }
 
+
+
         private void AddTableDataView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _controller.AddTableDataView = new AddTableDataView();
-            _controller.AddTableDataView.Controller = _controller;
+            _controller.AddColumnView = new AddColumnView();
+            _controller.AddColumnView.Controller = _controller;
         }
 
         private void CbxMessages_CheckedChanged(object sender, EventArgs e)

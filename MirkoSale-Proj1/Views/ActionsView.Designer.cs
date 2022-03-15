@@ -71,7 +71,7 @@
             // lblCurrentDB
             // 
             this.lblCurrentDB.AutoSize = true;
-            this.lblCurrentDB.Location = new System.Drawing.Point(204, 37);
+            this.lblCurrentDB.Location = new System.Drawing.Point(175, 37);
             this.lblCurrentDB.Name = "lblCurrentDB";
             this.lblCurrentDB.Size = new System.Drawing.Size(109, 13);
             this.lblCurrentDB.TabIndex = 8;
@@ -120,7 +120,7 @@
             // lblCurrentTable
             // 
             this.lblCurrentTable.AutoSize = true;
-            this.lblCurrentTable.Location = new System.Drawing.Point(204, 125);
+            this.lblCurrentTable.Location = new System.Drawing.Point(175, 121);
             this.lblCurrentTable.Name = "lblCurrentTable";
             this.lblCurrentTable.Size = new System.Drawing.Size(109, 13);
             this.lblCurrentTable.TabIndex = 15;

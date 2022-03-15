@@ -112,6 +112,12 @@
     <Compile Include="Views\AddColumnView.Designer.cs">
       <DependentUpon>AddColumnView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\AddRowView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\AddRowView.Designer.cs">
+      <DependentUpon>AddRowView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\TableView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\AddColumnView.resx">
       <DependentUpon>AddColumnView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\AddRowView.resx">
+      <DependentUpon>AddRowView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\TableView.resx">
       <DependentUpon>TableView.cs</DependentUpon>

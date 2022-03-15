@@ -15,31 +15,34 @@ namespace MirkoSale_MySQL
         private LoginView _loginView;
         private ActionsView _actionsView;
         private TableView _tableView;
-        private AddTableDataView _addTableDataView;
+        private AddColumnView _addColumnView;
+        private AddRowView _addRowView;
         private MainModel _model;
 
         private List<CheckBox> _messageCheckboxes = new List<CheckBox>();
         private bool _messageBoxes = true;
-        public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, AddTableDataView addTableDataView, MainModel model)
+        public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, AddColumnView addColumnView, AddRowView addRowView, MainModel model)
         {
             _loginView = loginView;
             _actionsView = actionsView;
             _tableView = tableView;
-            _addTableDataView = addTableDataView;
+            _addColumnView = addColumnView;
+            _addRowView = addRowView;
             _model = model;
             loginView.Controller = this;
             actionsView.Controller = this;
             tableView.Controller = this;
-            addTableDataView.Controller = this;
+            addColumnView.Controller = this;
+            addRowView.Controller = this;
             model.Controller = this;
         }
 
         public ActionsView ActionsView { get => _actionsView; set => _actionsView = value; }
         public LoginView LoginView { get => _loginView; set => _loginView = value; }
         public TableView TableView { get => _tableView; set => _tableView = value; }
-        public AddTableDataView AddTableDataView { get => _addTableDataView; set => _addTableDataView = value; }
+        public AddColumnView AddColumnView { get => _addColumnView; set => _addColumnView = value; }
+        public AddRowView AddRowView { get => _addRowView; set => _addRowView = value; }
         public MainModel Model { get => _model; set => _model = value; }
-
         public bool MessageBoxes { get => _messageBoxes; }
         public List<CheckBox> MessageCheckboxes { get => _messageCheckboxes; set => _messageCheckboxes = value; }
 
@@ -264,15 +267,15 @@ namespace MirkoSale_MySQL
         {
             if (!ExecuteCommand($"ALTER TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}` ADD COLUMN {name} {type}({length});"))
             {
-                _addTableDataView.Message = $"The column named \"{name}\" couldn't be added.";
-                _addTableDataView.Title = "Error";
-                _addTableDataView.Icon = MessageBoxIcon.Error;
+                _addColumnView.Message = $"The column named \"{name}\" couldn't be added.";
+                _addColumnView.Title = "Error";
+                _addColumnView.Icon = MessageBoxIcon.Error;
                 return false;
             }
 
-            _addTableDataView.Message = $"The column \"{name}\" was successfully added.";
-            _addTableDataView.Title = "Success";
-            _addTableDataView.Icon = MessageBoxIcon.Information;
+            _addColumnView.Message = $"The column \"{name}\" was successfully added.";
+            _addColumnView.Title = "Success";
+            _addColumnView.Icon = MessageBoxIcon.Information;
             return true;
         }
 
@@ -292,6 +295,40 @@ namespace MirkoSale_MySQL
             return true;
         }
 
+        public bool AddRow(List<string> fields, List<string> values)
+        {
+            string command = $"INSERT INTO `{_model.CurrentDB}`.`{_model.CurrentTable}` (";
+            foreach (string f in fields)
+            {
+                command += $"{f},";
+            }
+
+            //command = command.Substring(0, command[command.Count() - 1]);
+
+            command += ") VALUES (";
+            foreach (string v in values)
+            {
+                command += $"\"{v}\"";
+            }
+            command += ");";
+
+            //command = command.Substring(0, command[command.Count() - 1]);
+
+
+            System.Diagnostics.Debug.Write(command);
+            if (!ExecuteCommand(command))
+            {
+                _addRowView.Message = $"The row couldn't be added.";
+                _addRowView.Title = "Error";
+                _addRowView.Icon = MessageBoxIcon.Error;
+                return false;
+            }
+
+            _addRowView.Message = $"The row was successfully added.";
+            _addRowView.Title = "Success";
+            _addRowView.Icon = MessageBoxIcon.Information;
+            return true;
+        }
 
         public bool DeleteRow(string rowId)
         {

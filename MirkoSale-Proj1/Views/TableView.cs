@@ -93,7 +93,7 @@ namespace MirkoSale_MySQL
 
         private void BtnAddColumn_Click(object sender, EventArgs e)
         {
-            _controller.AddTableDataView.Open();
+            _controller.AddColumnView.Open();
         }
 
         private void ListTable_MouseClick(object sender, MouseEventArgs e)
@@ -171,6 +171,11 @@ namespace MirkoSale_MySQL
             WriteMessage();
 
             Open();
+        }
+
+        private void BtnAddData_Click(object sender, EventArgs e)
+        {
+            _controller.AddRowView.Open();
         }
     }
 }

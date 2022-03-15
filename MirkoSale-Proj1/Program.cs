@@ -20,10 +20,11 @@ namespace MirkoSale_MySQL
             ActionsView actionsView = new ActionsView();
             LoginView loginView = new LoginView();
             TableView tableView = new TableView();
-            AddTableDataView addTableDataView = new AddTableDataView();
+            AddColumnView addColumnView = new AddColumnView();
+            AddRowView addRowView = new AddRowView();
             MainModel model = new MainModel();
 
-            MainController controller = new MainController(loginView, actionsView, tableView, addTableDataView, model);
+            MainController controller = new MainController(loginView, actionsView, tableView, addColumnView, addRowView, model);
 
             Application.Run(loginView);
         }

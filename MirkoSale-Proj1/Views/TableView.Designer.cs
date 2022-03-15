@@ -31,6 +31,7 @@
             this.cbxMessages = new System.Windows.Forms.CheckBox();
             this.btnAddColumn = new System.Windows.Forms.Button();
             this.listTable = new System.Windows.Forms.DataGridView();
+            this.btnAddData = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.listTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -39,7 +40,7 @@
             this.cbxMessages.AutoSize = true;
             this.cbxMessages.Checked = true;
             this.cbxMessages.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbxMessages.Location = new System.Drawing.Point(553, 440);
+            this.cbxMessages.Location = new System.Drawing.Point(530, 440);
             this.cbxMessages.Name = "cbxMessages";
             this.cbxMessages.Size = new System.Drawing.Size(74, 17);
             this.cbxMessages.TabIndex = 23;
@@ -50,9 +51,9 @@
             // 
             // btnAddColumn
             // 
-            this.btnAddColumn.Location = new System.Drawing.Point(82, 434);
+            this.btnAddColumn.Location = new System.Drawing.Point(78, 436);
             this.btnAddColumn.Name = "btnAddColumn";
-            this.btnAddColumn.Size = new System.Drawing.Size(75, 23);
+            this.btnAddColumn.Size = new System.Drawing.Size(130, 23);
             this.btnAddColumn.TabIndex = 26;
             this.btnAddColumn.Text = "Add column";
             this.btnAddColumn.UseVisualStyleBackColor = true;
@@ -70,11 +71,22 @@
             this.listTable.TabIndex = 27;
             this.listTable.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListTable_MouseClick);
             // 
+            // btnAddData
+            // 
+            this.btnAddData.Location = new System.Drawing.Point(274, 436);
+            this.btnAddData.Name = "btnAddData";
+            this.btnAddData.Size = new System.Drawing.Size(130, 23);
+            this.btnAddData.TabIndex = 28;
+            this.btnAddData.Text = "Add rows of data";
+            this.btnAddData.UseVisualStyleBackColor = true;
+            this.btnAddData.Click += new System.EventHandler(this.BtnAddData_Click);
+            // 
             // TableView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 502);
+            this.Controls.Add(this.btnAddData);
             this.Controls.Add(this.listTable);
             this.Controls.Add(this.btnAddColumn);
             this.Controls.Add(this.cbxMessages);
@@ -95,5 +107,6 @@
         private System.Windows.Forms.CheckBox cbxMessages;
         private System.Windows.Forms.Button btnAddColumn;
         private System.Windows.Forms.DataGridView listTable;
+        private System.Windows.Forms.Button btnAddData;
     }
 }
