@@ -39,7 +39,7 @@
             this.cbxMessages.AutoSize = true;
             this.cbxMessages.Checked = true;
             this.cbxMessages.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbxMessages.Location = new System.Drawing.Point(874, 533);
+            this.cbxMessages.Location = new System.Drawing.Point(553, 440);
             this.cbxMessages.Name = "cbxMessages";
             this.cbxMessages.Size = new System.Drawing.Size(74, 17);
             this.cbxMessages.TabIndex = 23;
@@ -50,7 +50,7 @@
             // 
             // btnAddColumn
             // 
-            this.btnAddColumn.Location = new System.Drawing.Point(170, 458);
+            this.btnAddColumn.Location = new System.Drawing.Point(82, 434);
             this.btnAddColumn.Name = "btnAddColumn";
             this.btnAddColumn.Size = new System.Drawing.Size(75, 23);
             this.btnAddColumn.TabIndex = 26;
@@ -66,7 +66,7 @@
             this.listTable.Location = new System.Drawing.Point(12, 12);
             this.listTable.Name = "listTable";
             this.listTable.ReadOnly = true;
-            this.listTable.Size = new System.Drawing.Size(936, 415);
+            this.listTable.Size = new System.Drawing.Size(615, 400);
             this.listTable.TabIndex = 27;
             this.listTable.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListTable_MouseClick);
             // 
@@ -74,7 +74,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 562);
+            this.ClientSize = new System.Drawing.Size(638, 502);
             this.Controls.Add(this.listTable);
             this.Controls.Add(this.btnAddColumn);
             this.Controls.Add(this.cbxMessages);

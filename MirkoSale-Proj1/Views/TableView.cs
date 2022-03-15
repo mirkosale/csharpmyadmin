@@ -172,10 +172,5 @@ namespace MirkoSale_MySQL
 
             Open();
         }
-
-        private void TableView_Load_1(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -112,7 +112,6 @@
             this.Load += new System.EventHandler(this.LoginView_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

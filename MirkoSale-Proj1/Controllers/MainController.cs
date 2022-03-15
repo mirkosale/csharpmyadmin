@@ -260,6 +260,22 @@ namespace MirkoSale_MySQL
             return true;
         }
 
+        public bool AddColumn(string name, string type, int length)
+        {
+            if (!ExecuteCommand($"ALTER TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}` ADD COLUMN {name} {type}({length});"))
+            {
+                _addTableDataView.Message = $"The column named \"{name}\" couldn't be added.";
+                _addTableDataView.Title = "Error";
+                _addTableDataView.Icon = MessageBoxIcon.Error;
+                return false;
+            }
+
+            _addTableDataView.Message = $"The column \"{name}\" was successfully added.";
+            _addTableDataView.Title = "Success";
+            _addTableDataView.Icon = MessageBoxIcon.Information;
+            return true;
+        }
+
         public bool DeleteColumn(string column)
         {
             if (!ExecuteCommand($"ALTER TABLE `{_model.CurrentDB}`.`{_model.CurrentTable}` DROP COLUMN {column};"))
@@ -275,6 +291,7 @@ namespace MirkoSale_MySQL
             _tableView.Icon = MessageBoxIcon.Information;
             return true;
         }
+
 
         public bool DeleteRow(string rowId)
         {

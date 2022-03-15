@@ -37,6 +37,13 @@ namespace MirkoSale_MySQL
             _controller.AddTableDataView.Show();
         }
 
+        public void WriteMessage()
+        {
+            if (_controller.MessageBoxes)
+                MessageBox.Show(Message, Title, Button, Icon);
+        }
+
+
         private void AddTableDataView_Load(object sender, EventArgs e)
         {
             _controller.MessageCheckboxes.Add(cbxMessages);
@@ -44,8 +51,14 @@ namespace MirkoSale_MySQL
 
         private void BtnAddColumn_Click(object sender, EventArgs e)
         {
-            //string name = columnText.Text;
+            string name = txbColumnName.Text.Trim();
             string type = cbxListTypes.Text;
+            int length;
+            Int32.TryParse(txbLength.Text.Trim(), out length);
+
+            _controller.AddColumn(name, type, length);
+            _controller.TableView.Open();
+            WriteMessage();
         }
 
         private void AddTableDataView_FormClosed(object sender, FormClosedEventArgs e)
