@@ -314,7 +314,6 @@ namespace MirkoSale_MySQL
 
             //command = command.Substring(0, command[command.Count() - 1]);
 
-
             System.Diagnostics.Debug.Write(command);
             if (!ExecuteCommand(command))
             {
