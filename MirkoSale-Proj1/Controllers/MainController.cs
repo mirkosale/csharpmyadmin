@@ -297,22 +297,30 @@ namespace MirkoSale_MySQL
 
         public bool AddRow(List<string> fields, List<string> values)
         {
+            double empty;
             string command = $"INSERT INTO `{_model.CurrentDB}`.`{_model.CurrentTable}` (";
             foreach (string f in fields)
             {
-                command += $"{f},";
+                command += $"`{f}`,";
             }
 
-            //command = command.Substring(0, command[command.Count() - 1]);
+            command = command.Substring(0, command.Count() - 1);
 
             command += ") VALUES (";
             foreach (string v in values)
             {
-                command += $"\"{v}\"";
+                if (double.TryParse(v, out empty))
+                {
+                    command += $"{v},";
+                }
+                else
+                {
+                    command += $"'{v}',";
+                }
             }
-            command += ");";
+            command = command.Substring(0, command.Count() - 1);
 
-            //command = command.Substring(0, command[command.Count() - 1]);
+            command += ");";
 
             System.Diagnostics.Debug.Write(command);
             if (!ExecuteCommand(command))

@@ -32,6 +32,7 @@
             this.btnAddColumn = new System.Windows.Forms.Button();
             this.listTable = new System.Windows.Forms.DataGridView();
             this.btnAddData = new System.Windows.Forms.Button();
+            this.btnAddRowWithAutoIncID = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.listTable)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             // 
             this.btnAddColumn.Location = new System.Drawing.Point(78, 436);
             this.btnAddColumn.Name = "btnAddColumn";
-            this.btnAddColumn.Size = new System.Drawing.Size(130, 23);
+            this.btnAddColumn.Size = new System.Drawing.Size(96, 23);
             this.btnAddColumn.TabIndex = 26;
             this.btnAddColumn.Text = "Add column";
             this.btnAddColumn.UseVisualStyleBackColor = true;
@@ -73,19 +74,30 @@
             // 
             // btnAddData
             // 
-            this.btnAddData.Location = new System.Drawing.Point(274, 436);
+            this.btnAddData.Location = new System.Drawing.Point(196, 436);
             this.btnAddData.Name = "btnAddData";
-            this.btnAddData.Size = new System.Drawing.Size(130, 23);
+            this.btnAddData.Size = new System.Drawing.Size(146, 23);
             this.btnAddData.TabIndex = 28;
             this.btnAddData.Text = "Add rows of data";
             this.btnAddData.UseVisualStyleBackColor = true;
             this.btnAddData.Click += new System.EventHandler(this.BtnAddData_Click);
+            // 
+            // btnAddRowWithAutoIncID
+            // 
+            this.btnAddRowWithAutoIncID.Location = new System.Drawing.Point(359, 436);
+            this.btnAddRowWithAutoIncID.Name = "btnAddRowWithAutoIncID";
+            this.btnAddRowWithAutoIncID.Size = new System.Drawing.Size(143, 23);
+            this.btnAddRowWithAutoIncID.TabIndex = 29;
+            this.btnAddRowWithAutoIncID.Text = "Add rows with auto inc. ID";
+            this.btnAddRowWithAutoIncID.UseVisualStyleBackColor = true;
+            this.btnAddRowWithAutoIncID.Click += new System.EventHandler(this.BtnAddRowWithAutoIncID_Click);
             // 
             // TableView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(638, 502);
+            this.Controls.Add(this.btnAddRowWithAutoIncID);
             this.Controls.Add(this.btnAddData);
             this.Controls.Add(this.listTable);
             this.Controls.Add(this.btnAddColumn);
@@ -108,5 +120,6 @@
         private System.Windows.Forms.Button btnAddColumn;
         private System.Windows.Forms.DataGridView listTable;
         private System.Windows.Forms.Button btnAddData;
+        private System.Windows.Forms.Button btnAddRowWithAutoIncID;
     }
 }

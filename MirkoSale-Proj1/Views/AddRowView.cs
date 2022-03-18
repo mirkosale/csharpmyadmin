@@ -27,7 +27,7 @@ namespace MirkoSale_MySQL
             InitializeComponent();
         }
 
-        public void Open()
+        public void Open(bool autoIncrementedId)
         {
             if (_controller.MessageBoxes)
                 cbxMessages.Checked = true;
@@ -35,7 +35,10 @@ namespace MirkoSale_MySQL
                 cbxMessages.Checked = false;
 
             fields = _controller.GetTableFields();
-            fields.RemoveAt(0);
+            if (autoIncrementedId)
+            {
+                fields.RemoveAt(0);
+            }
             this.Size = new System.Drawing.Size(400, 100 + 30 * fields.Count());
             btnAddRow.Location = new System.Drawing.Point(140, 25 + 30 * fields.Count());
             cbxMessages.Location = new System.Drawing.Point(298, 33 + 30 * fields.Count());
@@ -45,7 +48,7 @@ namespace MirkoSale_MySQL
             {
                 Label lblColumn = new Label();
                 lblColumn.Location = new System.Drawing.Point(12, 20 + 30 * x);
-                lblColumn.Name = "column" + x;
+                lblColumn.Name = "lable" + fields[x];
                 lblColumn.RightToLeft = System.Windows.Forms.RightToLeft.No;
                 lblColumn.Size = new System.Drawing.Size(120, 13);
                 lblColumn.Text = fields[x];
@@ -53,7 +56,7 @@ namespace MirkoSale_MySQL
                 lblColumn.Enabled = true;
 
                 TextBox txbColumnInput = new TextBox();
-                txbColumnInput.Name = fields[x];
+                txbColumnInput.Name = "column" + x;
                 txbColumnInput.Location = new System.Drawing.Point(140, 17 + 30 * x);
                 txbColumnInput.Size = new System.Drawing.Size(225, 13);
                 Controls.Add(lblColumn);
@@ -84,7 +87,14 @@ namespace MirkoSale_MySQL
             {
                 if (c.Name.Contains("column"))
                 {
-                    values.Add(c.Text.Trim());
+                    if (!(c.Text == ""))
+                    {
+                        values.Add(c.Text.Trim());
+                    }
+                    else
+                    {
+                        values.Add("NULL");
+                    }
                 }
             }
 
@@ -99,6 +109,10 @@ namespace MirkoSale_MySQL
                     }
                 }
             }
+
+            WriteMessage();
+
+            _controller.TableView.Open();
         }
 
         private void AddTableDataView_FormClosed(object sender, FormClosedEventArgs e)

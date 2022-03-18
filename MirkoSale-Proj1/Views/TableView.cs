@@ -175,7 +175,13 @@ namespace MirkoSale_MySQL
 
         private void BtnAddData_Click(object sender, EventArgs e)
         {
-            _controller.AddRowView.Open();
+            _controller.AddRowView.Open(false);
+        }
+
+        private void BtnAddRowWithAutoIncID_Click(object sender, EventArgs e)
+        {
+            _controller.AddRowView.Open(true);
+
         }
     }
 }
