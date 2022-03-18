@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Used to link all of the Views and Models to the Controller and start the login view
+
+using System;
 using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
 {
     static class Program
     {
-        /// <summary>
-        /// Point d'entrée principal de l'application.
-        /// </summary>
         [STAThread]
         static void Main()
         {

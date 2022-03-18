@@ -1,10 +1,11 @@
-﻿using System;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Main controller of the program, links all of the views together
+
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-using System.Globalization;
 using System.Windows.Forms;
 
 
@@ -21,6 +22,16 @@ namespace MirkoSale_MySQL
 
         private List<CheckBox> _messageCheckboxes = new List<CheckBox>();
         private bool _messageBoxes = true;
+
+        /// <summary>
+        /// Main constructor of the Controller
+        /// </summary>
+        /// <param name="loginView"></param>
+        /// <param name="actionsView"></param>
+        /// <param name="tableView"></param>
+        /// <param name="addColumnView"></param>
+        /// <param name="addRowView"></param>
+        /// <param name="model"></param>
         public MainController(LoginView loginView, ActionsView actionsView, TableView tableView, AddColumnView addColumnView, AddRowView addRowView, MainModel model)
         {
             _loginView = loginView;
@@ -46,6 +57,11 @@ namespace MirkoSale_MySQL
         public bool MessageBoxes { get => _messageBoxes; }
         public List<CheckBox> MessageCheckboxes { get => _messageCheckboxes; set => _messageCheckboxes = value; }
 
+        /// <summary>
+        /// Executes a command where the result isn't guaranteed (=> needing to check for errors) 
+        /// </summary>
+        /// <param name="query">The SQL query that is going to be executed</param>
+        /// <returns>True of false depending of the result</returns>
         public bool ExecuteCommand(string query)
         {
             _model.Command.CommandText = query;
@@ -53,15 +69,19 @@ namespace MirkoSale_MySQL
             {
                 _model.Command.ExecuteNonQuery();
             }
-            catch (MySqlException e)
+            catch (MySqlException)
             {
-                System.Diagnostics.Debug.Write(e.ToString());
                 return false;
             }
 
             return true;
         }
 
+        /// <summary>
+        /// Execute a query that doesn't require a condition
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public List<string> ExecuteSimpleQuery(string query)
         {
             List<string> list = new List<string>();
@@ -79,14 +99,14 @@ namespace MirkoSale_MySQL
         }
 
         /// <summary>
-        /// 
+        /// Executes a command where it is necessary to have a condition and to return some values
         /// </summary>
         /// <param name="query">SQL query / command</param>
         /// <param name="rowNumber">The number of the row you're getting the data from</param>
-        /// <returns></returns>
+        /// <returns>A list of values</returns>
         public List<List<string>> ExecutePrepareQuery(string query, byte rowNumber)
         {
-            List<List<string>> list = new List<List<string>>();
+            List<List<string>> valueList = new List<List<string>>();
             MySqlDataReader reader;
             _model.Command.CommandText = query;
 
@@ -95,28 +115,30 @@ namespace MirkoSale_MySQL
             byte x = 0;
             while (reader.Read())
             {
-                list.Add(new List<string>());
+                valueList.Add(new List<string>());
 
                 for (int i = 0; i < rowNumber; i++)
                 {
                     try
                     {
-                        list[x].Add(reader.GetString(i));
+                        valueList[x].Add(reader.GetString(i));
                     }
+
+                    //Prevent a crash by trying to read an empty string => gets replaced by the NULL value
                     catch (System.Data.SqlTypes.SqlNullValueException)
                     {
-                        list[x].Add("NULL");
+                        valueList[x].Add("NULL");
                     }
                 }
                 x++;
             }
 
             reader.Close();
-            return list;
+            return valueList;
         }
 
         /// <summary>
-        /// 
+        /// Lets the user connect to his local hosted database
         /// </summary>
         /// <param name="user">User of DB</param>
         /// <param name="password">Password of Database</param>
@@ -149,10 +171,6 @@ namespace MirkoSale_MySQL
             return true;
         }
 
-
-        /// <summary>
-        /// Closes the connection and changes the message of the Message box.
-        /// </summary>
         public void Disconnect()
         {
             _model.Connection.Close();
@@ -161,6 +179,7 @@ namespace MirkoSale_MySQL
             _actionsView.Title = "Success";
             _actionsView.Icon = MessageBoxIcon.Information;
         }
+
         public bool CreateDatabase(string dbNameNotChecked)
         {
             string dbName = dbNameNotChecked.Trim();
@@ -192,7 +211,6 @@ namespace MirkoSale_MySQL
         {
             if (!ExecuteCommand($"DROP DATABASE `{_model.CurrentDB}`;"))
             {
-
                 _actionsView.Message = $"The database named \"{_model.CurrentDB}\" couldn't be deleted.";
                 _actionsView.Title = "Error";
                 _actionsView.Icon = MessageBoxIcon.Error;
@@ -207,10 +225,9 @@ namespace MirkoSale_MySQL
             return true;
         }
 
-
-
         public bool CreateTable(string tableNameNotCheck)
         {
+            //Trim the name to check for spaces before and after the input name
             string tableName = tableNameNotCheck.Trim();
 
             if (tableName.Length >= 2)
@@ -295,10 +312,18 @@ namespace MirkoSale_MySQL
             return true;
         }
 
+        /// <summary>
+        /// Add a new Row of informations in a table
+        /// </summary>
+        /// <param name="fields">Different fields of the table</param>
+        /// <param name="values">Values input by the user</param>
+        /// <returns>True of false depending if the row was succesfully added or not</returns>
         public bool AddRow(List<string> fields, List<string> values)
         {
             double empty;
             string command = $"INSERT INTO `{_model.CurrentDB}`.`{_model.CurrentTable}` (";
+
+            //Add every field in the query
             foreach (string f in fields)
             {
                 command += $"`{f}`,";
@@ -307,8 +332,11 @@ namespace MirkoSale_MySQL
             command = command.Substring(0, command.Count() - 1);
 
             command += ") VALUES (";
+
+            //Add every input balues in the query
             foreach (string v in values)
             {
+                //Checks if the inputted information is supposed to be a number (not a string => dont put quotes)
                 if (double.TryParse(v, out empty))
                 {
                     command += $"{v},";
@@ -322,7 +350,6 @@ namespace MirkoSale_MySQL
 
             command += ");";
 
-            System.Diagnostics.Debug.Write(command);
             if (!ExecuteCommand(command))
             {
                 _addRowView.Message = $"The row couldn't be added.";
@@ -336,7 +363,6 @@ namespace MirkoSale_MySQL
             _addRowView.Icon = MessageBoxIcon.Information;
             return true;
         }
-
         public bool DeleteRow(string rowId)
         {
             List<string> columns = GetTableFields();
@@ -381,10 +407,17 @@ namespace MirkoSale_MySQL
             return rows;
         }
 
+
+        /// <summary>
+        /// Changes the "Return messages" check state through every single Interface
+        /// </summary>
+        /// <param name="tempCheckbox">The checkbox which's state was changed</param>
         public void ChangeCheckboxState(CheckBox tempCheckbox)
         {
+            //Get the current state of that check
             if (tempCheckbox.Checked == true)
             {
+                //Change every check in the list of the forms to true
                 foreach (CheckBox c in _messageCheckboxes)
                 {
                     c.Checked = true;
@@ -393,6 +426,7 @@ namespace MirkoSale_MySQL
             }
             else
             {
+                //... to false
                 foreach (CheckBox c in _messageCheckboxes)
                 {
                     c.Checked = false;

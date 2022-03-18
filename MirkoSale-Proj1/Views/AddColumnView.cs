@@ -1,11 +1,10 @@
-﻿using System;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Lets the user a column to the table
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
@@ -65,8 +64,6 @@ namespace MirkoSale_MySQL
             }
             WriteMessage();
         }
-
-
 
         private void AddTableDataView_FormClosed(object sender, FormClosedEventArgs e)
         {

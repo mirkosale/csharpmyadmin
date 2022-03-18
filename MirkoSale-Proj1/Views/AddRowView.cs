@@ -1,11 +1,11 @@
-﻿using System;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Lets the user add information to a table depending of the columns it has
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
@@ -29,6 +29,16 @@ namespace MirkoSale_MySQL
 
         public void Open(bool autoIncrementedId)
         {
+            //Remove already existing options on the View if not done when closing the Form
+            foreach (Control c in Controls)
+            {
+                if (c.Name.Contains("column") || c.Name.Contains("label"))
+                {
+                    c.Enabled = false;
+                    c.Hide();
+                }
+            }
+
             if (_controller.MessageBoxes)
                 cbxMessages.Checked = true;
             else
@@ -48,7 +58,7 @@ namespace MirkoSale_MySQL
             {
                 Label lblColumn = new Label();
                 lblColumn.Location = new System.Drawing.Point(12, 20 + 30 * x);
-                lblColumn.Name = "lable" + fields[x];
+                lblColumn.Name = "label" + fields[x];
                 lblColumn.RightToLeft = System.Windows.Forms.RightToLeft.No;
                 lblColumn.Size = new System.Drawing.Size(120, 13);
                 lblColumn.Text = fields[x];

@@ -1,11 +1,11 @@
-﻿using System;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Main View of the program, lets the user view and edit information about his databases and tables
+///              Uses a TreeView as it's main source of information and control.++++++++++++++++++++
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MirkoSale_MySQL
@@ -25,14 +25,17 @@ namespace MirkoSale_MySQL
             InitializeComponent();
         }
 
-
         public void WriteMessage()
         {
             if (_controller.MessageBoxes)
-                MessageBox.Show(Message, Title, Button, Icon);   
+                MessageBox.Show(Message, Title, Button, Icon);
         }
 
-        public void UpdateCurrentDB(bool deleted = false, bool updateList = false)
+        /// <summary>
+        /// Updates the currently used database label 
+        /// </summary>
+        /// <param name="deleted">If there was a database that has been deleted => set to "none"</param>
+        public void UpdateCurrentDB(bool deleted = false)
         {
             if (!deleted)
             {
@@ -49,10 +52,13 @@ namespace MirkoSale_MySQL
                 btnCreateTable.Enabled = false;
             }
 
-            if (updateList)
-                UpdateList();
         }
 
+        /// <summary>
+        /// Updates the currently used table label and refreshes the TreeView
+        /// </summary>
+        /// <param name="deleted">If there was a table that has been deleted => set to "none"</param>
+        /// <param name="updateList">If on => updates the treeview</param>
         public void UpdateCurrentTable(bool deleted = false, bool updateList = false)
         {
             if (!deleted && _controller.Model.CurrentTable != null)
@@ -72,14 +78,23 @@ namespace MirkoSale_MySQL
                 UpdateList();
         }
 
+        /// <summary>
+        /// Gets all of the databases and tables and list them in the TreeView
+        /// </summary>
         public void UpdateList()
         {
+            //Clear TreeView
             listDatabases.Nodes.Clear();
+
+            //Get the databases
             List<string> databases = _controller.UpdateDatabases();
 
             byte databasecnt = 0;
+
+            //Get the tables for each database
             foreach (string d in databases)
             {
+                //Get the tables for a specific database
                 List<string> tables = _controller.UpdateTables(d);
                 listDatabases.Nodes.Add(d);
 
@@ -104,15 +119,19 @@ namespace MirkoSale_MySQL
         private void Disconnect_Click(object sender, EventArgs e)
         {
             _controller.Disconnect();
-            _controller.LoginView.Show();
+            _controller.TableView.Hide();
+            _controller.AddColumnView.Hide();
+            _controller.AddRowView.Hide();
             this.Hide();
+            _controller.LoginView.Show();
         }
 
         private void BtnCreateDB_Click(object sender, EventArgs e)
         {
             if (_controller.CreateDatabase(txbDBName.Text))
             {
-                UpdateCurrentDB(false, true);
+                UpdateCurrentDB(false);
+                UpdateList();
             }
             WriteMessage();
         }
@@ -147,8 +166,14 @@ namespace MirkoSale_MySQL
             WriteMessage();
         }
 
+        /// <summary>
+        /// Updates the currently used and database labels depending on what part of the TreeView was clicked
+        /// </summary>
+        /// <param name="sender">Obj</param>
+        /// <param name="e">Check for click event</param>
         private void ListDatabases_Click(object sender, TreeNodeMouseClickEventArgs e)
         {
+            //Check if the clicked part Node was a table or a database
             if (e.Node.Parent == null)
             {
                 _controller.Model.CurrentDB = e.Node.Text;
@@ -160,12 +185,16 @@ namespace MirkoSale_MySQL
                 _controller.Model.CurrentTable = e.Node.Text;
                 
             }
+
+            //Update the two labels
             UpdateCurrentDB();
             UpdateCurrentTable();
         }
 
+
         private void ListDatabases_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            //Check if a table that was double clicked and not a database
             if (e.Node.Parent != null && Controller.Model.CurrentTable != null)
             {
                 _controller.TableView.Open();
@@ -184,7 +213,9 @@ namespace MirkoSale_MySQL
 
         public void Open()
         {
-            UpdateCurrentDB(true, true);
+            //Updates the labels
+            UpdateCurrentDB(true);
+            UpdateCurrentTable(true, true);
             _controller.ActionsView.Show();
         }
     }

@@ -1,4 +1,9 @@
-﻿using MySql.Data.MySqlClient;
+﻿///ETML
+///Author : Mirko Sale
+///Date : 18.03.2022
+///Description : Main model of the program, used to store all of the important and frequently used information in the program
+
+using MySql.Data.MySqlClient;
 
 namespace MirkoSale_MySQL
 {
